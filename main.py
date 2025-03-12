@@ -24,4 +24,13 @@ for _ in range(10):
 print()
 
 from function import command1
-command1()
+from function import command2
+
+thread1 = threading.Thread(target=command1())
+thread2 = threading.Thread(target=command2())
+
+thread1.start()
+thread2.start()
+
+thread1.join()
+thread2.join()

@@ -25,8 +25,12 @@ def command1():
             time.sleep(60)
 
 def command2():
+
     from rcon.source import Client
     with Client(f'{ipadd}', port, passwd=f'{password}') as client:
 
-        response = client.run("list")
+        response = client.run("say @a 服务器已接入RCON")
         print(response)
+
+
+
