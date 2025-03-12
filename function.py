@@ -2,7 +2,7 @@ from config import ipadd
 from config import port
 from config import password
 
-
+#在这里编辑你的“命令方块”
 
 def command1():
 
@@ -12,7 +12,7 @@ def command1():
     with Client(f'{ipadd}', port, passwd=f'{password}') as client:
         # 扫地机器人模块
         while True:
-            response = client.run('tell @a 服务器马上就要扫地啦！')
+            response = client.run('say @a 服务器马上就要扫地啦！')
             print(response)
             t = 5
             for _ in range(5):
