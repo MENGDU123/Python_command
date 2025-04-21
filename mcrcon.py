@@ -1,5 +1,4 @@
 from rcon.source import Client
-import time
 
 from config import *
 
@@ -8,42 +7,41 @@ class MCRcon(Client):
     def __init__(self):
         super().__init__(f'{ipadd}', port, passwd=f'{password}')
 
-    def get_scoreboard(self, player):
-        response = self.run(f'scoreboard players list {player}')
-        scoreboards = ''.join(response.split(':', 1)[1:]).strip()
+    def get_scoreboard(self, player: str) -> dict[str, int]:
 
-        scoreboard = {}
+        response: str = self.run(f'scoreboard players list {player}')
+        scoreboards: str = ''.join(response.split(':', 1)[1:]).strip()
+
+        scoreboard: dict[str, int] = {}
 
         if scoreboards:
-            scoreboards = scoreboards.split('[')[1:]
+            scoreboards_list: list[str] = scoreboards.split('[')[1:]
 
-            for score in scoreboards:
+            for score in scoreboards_list:
                 key, value = score.split(']: ')
                 scoreboard[key] = int(value)
 
         return scoreboard
 
-    def interrupt_mode(self):
+    def get_player(self) -> list[str]:
+
+        players: str = self.run('list').strip()
+
+        player_list: list[str] = players.split(': ', 1)[1:]
+
+        return player_list if not player_list else player_list[0].split(', ')
+
+    def interrupt_mode(self) -> None:
         while cmd := input():
             print(self.run(cmd))
 
 
 if __name__ == '__main__':
     with MCRcon() as mr:
-        player_scoreboards = mr.get_scoreboard(f'Peter_2500')
+        player_scoreboards = mr.get_scoreboard(f'Steve')
         print(player_scoreboards)
 
         print(f'123计分板的数值是: {player_scoreboards.get('123')}')
-
-        # 示例应用
-        kill_count = 0
-        # while True:
-        #     player_scoreboards = mr.get_scoreboard(f'Peter_2500')
-        #     new_kill_count = player_scoreboards.get('kills', 0)
-        #     if new_kill_count > kill_count:
-        #         print(f"Kill count 增加了 {new_kill_count - kill_count}！现在是 {new_kill_count}")
-        #     kill_count = new_kill_count
-        #     time.sleep(0.5)
-
+        print(mr.get_player())
 
         mr.interrupt_mode()
