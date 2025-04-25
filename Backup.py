@@ -1,15 +1,17 @@
 """
 该程序只能在本地使用。
+只需要将此文件和config复制到同一目录即可工作。
 """
 import os
-import zipfile
+import tarfile
 import time
+import shutil
 
 from config import path
-from config import worldname
+from config import world
 from config import backupCount
 
-if worldname == "":
+if world == "":
     raise ImportError("没有指定世界")
 elif path == "":
     raise ImportError("没有指定服务器目录")
@@ -18,12 +20,12 @@ else:
 
 os.chdir(f"{path}")
 #切换到工作目录
-if os.path.exists ('backup'):
-    pass
-else:
-    os.mkdir('backup')
+# if os.path.exists ('backup'):
+#     pass
+# else:
+#     os.mkdir('backup')
 
-def now():
+def now(): #用于获取当前时间，并转换为可读的方式
     import time
     # 获取当前时间的时间戳
     current_timestamp = time.time()
@@ -33,21 +35,18 @@ def now():
     formatted_time = time.strftime('%Y-%m-%d %H_%M_%S', local_time)
     return formatted_time
 
-def backup():
-    zip_file = str(worldname)
-    zip_file_new = zip_file + now() +'.zip'
-
-    # 如果文件存在
-    if not os.path.exists(zip_file):
-        raise Exception('文件不存在！')
-    else:
-    # 创建 ZipFile 对象
-        with zipfile.ZipFile(zip_file_new, 'w', zipfile.ZIP_DEFLATED) as zipf:
-    # 写压缩文件
-            zipf.write(zip_file)
-        print('文件压缩成功！')
-
+def tar_create(output_filename,source_dir,compression="w:gz"):
+    with tarfile.open(output_filename,compression) as tar:
+        tar.add(source_dir,arcname=os.path.basename(source_dir))
 
 while True:
-    backup()
-    time.sleep(backupCount)
+
+    if not os.path.exists(world):
+        raise Exception('目录不存在！')
+
+    clock = str(now())
+    tar_name = f"Backup_{clock}.tar.gz"
+    tar_create(tar_name,world)
+    print(f"成功创建归档：Backup_{clock}.tar.gz")
+
+    time.sleep(backupCount) #在config中可以设置备份时长。
