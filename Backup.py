@@ -5,7 +5,6 @@
 import os
 import tarfile
 import time
-import shutil
 
 from config import path
 from config import world
