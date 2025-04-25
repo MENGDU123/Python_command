@@ -1,3 +1,7 @@
+"""
+该模块功能是外置命令方块，利用 RCON 对服务器发送指令。
+"""
+
 import threading #多线程库
 import time #时间库
 from cgi import print_arguments

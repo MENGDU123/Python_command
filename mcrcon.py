@@ -1,3 +1,10 @@
+"""
+——Peter对 Python 的造诣远比 MENGDU 深。
+该模块由 Peter 编写。
+
+该模块是远程终端 (RCON),有交互模式可以直接对服务输入命令。
+此外，该 RCON 可以读取玩家计分板，新建 Python 变量。
+"""
 from rcon.source import Client
 import time
 
